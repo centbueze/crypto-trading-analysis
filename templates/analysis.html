@@ -1,0 +1,148 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="card shadow mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h2 class="mb-0">{{ symbol }} Analysis - {{ interval }}</h2>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="alert alert-{% if recommendation.action == 'BUY' %}success{% elif recommendation.action == 'SELL' %}danger{% else %}warning{% endif %}">
+                                <h4 class="alert-heading">{{ recommendation.action }} Recommendation</h4>
+                                <p>{{ recommendation.risk_assessment }}</p>
+                                <hr>
+                                <p class="mb-0">{{ recommendation.reason }}</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5>Trade Details</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card bg-light mb-3">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Entry Price</h6>
+                                                    <p class="card-text">{{ "%.4f"|format(recommendation.entry) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card bg-light mb-3">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Current Price</h6>
+                                                    <p class="card-text">{{ "%.4f"|format(current_price) }}</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="card bg-light mb-3">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Stop Loss</h6>
+                                                    <p class="card-text">{{ "%.4f"|format(recommendation.stop_loss) }}</p>
+                                                    <small class="text-danger">{{ recommendation.risk_pct }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="card bg-light mb-3">
+                                                <div class="card-body">
+                                                    <h6 class="card-subtitle mb-2 text-muted">Take Profit</h6>
+                                                    <p class="card-text">{{ "%.4f"|format(recommendation.take_profit) }}</p>
+                                                    <small class="text-success">{{ recommendation.reward_pct }}</small>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    {% if chart %}
+                    <div class="mt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Technical Analysis Chart</h5>
+                            </div>
+                            <div class="card-body">
+                                <img src="data:image/png;base64,{{ chart }}" class="img-fluid" alt="Technical Analysis Chart">
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+
+                    <div class="mt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Trading Signals</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    {% if signals.sma_cross %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">SMA Crossover</h6>
+                                                <span class="badge bg-{% if signals.sma_cross == 'bullish' %}success{% else %}danger{% endif %}">
+                                                    {{ signals.sma_cross|upper }} (20/50 MA)
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if signals.macd_cross %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">MACD Crossover</h6>
+                                                <span class="badge bg-{% if signals.macd_cross == 'bullish' %}success{% else %}danger{% endif %}">
+                                                    {{ signals.macd_cross|upper }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                    
+                                    {% if signals.rsi_signal %}
+                                    <div class="col-md-4 mb-3">
+                                        <div class="card">
+                                            <div class="card-body">
+                                                <h6 class="card-subtitle mb-2 text-muted">RSI Signal</h6>
+                                                <span class="badge bg-{% if signals.rsi_signal == 'oversold' %}success{% else %}danger{% endif %}">
+                                                    {{ signals.rsi_signal|upper }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mt-4">
+                        <div class="card">
+                            <div class="card-header">
+                                <h5>Detailed Analysis Report</h5>
+                            </div>
+                            <div class="card-body">
+                                <pre class="bg-light p-3">{{ report }}</pre>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

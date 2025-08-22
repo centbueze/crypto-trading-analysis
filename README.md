@@ -22,5 +22,6 @@ crypto-trading-predictor/
 │── models/               # Trained models (e.g., .pkl, .h5, .pt)
 │── notebooks/            # Jupyter notebooks for experiments
 │── app.py                # Flask / Streamlit app for live predictions
+
 │── requirements.txt      # Dependencies
 │── README.md             # Documentation
